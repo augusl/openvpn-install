@@ -14,8 +14,6 @@ fi
 # Discard stdin. Needed when running from an one-liner which includes a newline
 read -N 999999 -t 0.001
 
-HOSTNAME=$(cat /proc/sys/kernel/hostname)
-
 # Detect OS
 # $os_version variables aren't always in use, but are kept here for convenience
 if grep -qs "ubuntu" /etc/os-release; then
@@ -210,7 +208,7 @@ if [[ ! -e /etc/openvpn/server/server.conf ]]; then
 	echo
 	echo "Enter a name for the first client:"
 	# shellcheck disable=SC2030
-	echo "$HOSTNAME" | read -p "Name [client]: " unsanitized_client
+	echo "client" | read -p "Name [client]: " unsanitized_client
 	# Allow a limited set of characters to avoid conflicts
 	# shellcheck disable=SC2001
 	# shellcheck disable=SC2031
