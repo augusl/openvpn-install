@@ -119,6 +119,7 @@ if [[ ! -e /etc/openvpn/server/server.conf ]]; then
 		ip -4 addr | grep inet | grep -vE '127(\.[0-9]{1,3}){3}' | cut -d '/' -f 1 | grep -oE '[0-9]{1,3}(\.[0-9]{1,3}){3}' | nl -s ') '
 		# shellcheck disable=SC2030
 		echo "1" | read -p "IPv4 address [1]: " ip_number
+                ip_number="1"
 		# shellcheck disable=SC2031
 		until [[ -z "$ip_number" || "$ip_number" =~ ^[0-9]+$ && "$ip_number" -le "$number_of_ip" ]]; do
 			echo "$ip_number: invalid selection."
@@ -135,6 +136,7 @@ if [[ ! -e /etc/openvpn/server/server.conf ]]; then
 		get_public_ip=$(grep -m 1 -oE '^[0-9]{1,3}(\.[0-9]{1,3}){3}$' <<< "$(wget -T 10 -t 1 -4qO- "http://ip1.dynupdate.no-ip.com/" || curl -m 10 -4Ls "http://ip1.dynupdate.no-ip.com/")")
 		# shellcheck disable=SC2030
 		echo "$get_public_ip" | read -p "Public IPv4 address / hostname [$get_public_ip]: " public_ip
+  		public_ip="$get_public_ip"
 		# If the checkip service is unavailable and user didn't provide input, ask again
 		# shellcheck disable=SC2031
 		until [[ -n "$get_public_ip" || -n "$public_ip" ]]; do
@@ -167,6 +169,7 @@ if [[ ! -e /etc/openvpn/server/server.conf ]]; then
 	echo "   2) TCP"
 	# shellcheck disable=SC2030
 	echo 2 | read -p "Protocol [1]: " protocol
+ 	protocol=2
 	# shellcheck disable=SC2031
 	until [[ -z "$protocol" || "$protocol" =~ ^[12]$ ]]; do
 		echo "$protocol: invalid selection."
@@ -184,6 +187,7 @@ if [[ ! -e /etc/openvpn/server/server.conf ]]; then
 	echo "What port should OpenVPN listen to?"
 	# shellcheck disable=SC2030
 	echo 1194 | read -p "Port [1194]: " port
+ 	port="1194"
 	# shellcheck disable=SC2031
 	until [[ -z "$port" || "$port" =~ ^[0-9]+$ && "$port" -le 65535 ]]; do
 		echo "$port: invalid port."
@@ -200,6 +204,7 @@ if [[ ! -e /etc/openvpn/server/server.conf ]]; then
 	echo "   6) AdGuard"
 	# shellcheck disable=SC2030
 	echo 3 | read -p "DNS server [1]: " dns
+ 	dns=3
 	# shellcheck disable=SC2031
 	until [[ -z "$dns" || "$dns" =~ ^[1-6]$ ]]; do
 		echo "$dns: invalid selection."
@@ -209,6 +214,7 @@ if [[ ! -e /etc/openvpn/server/server.conf ]]; then
 	echo "Enter a name for the first client:"
 	# shellcheck disable=SC2030
 	echo "client" | read -p "Name [client]: " unsanitized_client
+ 	client="client"
 	# Allow a limited set of characters to avoid conflicts
 	# shellcheck disable=SC2001
 	# shellcheck disable=SC2031
